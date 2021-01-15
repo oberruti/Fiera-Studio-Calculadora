@@ -2,4 +2,4 @@
  Calculadora para el challenge de fiera studio
 
  Comando utilizado: Create-react-app.
- Ver codigo React en /calculadora
+ Ver codigo React en /app
