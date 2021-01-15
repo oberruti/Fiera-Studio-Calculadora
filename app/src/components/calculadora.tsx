@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useCallback, useState } from 'react'
 import { JustChildren, Style } from '../utils/tsTypes'
 import { commonStyleResources } from '../utils/style'
 
@@ -11,11 +11,19 @@ function Calculadora(): JSX.Element {
         display: 'flex',
         justifyContent: 'center',
     }
+
+    const [result, setResult] = useState('0')
+
+    const onClickButton = useCallback((value: string) => {
+        // const valueToShow = getValueToShow(value)
+        // setResult(valueToShow)
+    }, [result, setResult])
+
     return (
         <div style={background}>
             <Container>
-                <Resultado/>
-                <Botonera />
+                <Resultado resultado={result}/>
+                <Botonera onClickButton={onClickButton} />
             </Container>
         </div>
     )
@@ -35,7 +43,7 @@ function Container(props: JustChildren): JSX.Element {
     )
 }
 
-function Resultado(): JSX.Element {
+function Resultado(props: {resultado: string}): JSX.Element {
     const style: Style = {
         height: '75px',
         padding: '10px',
@@ -45,17 +53,19 @@ function Resultado(): JSX.Element {
         borderBottomWidth: '2px',
         borderBottomStyle: 'solid',
         color: 'white',
-        fontSize: '30px',
-        alignItems: 'flex-end'
+        fontSize: '60px',
+        alignItems: 'flex-end',
+        cursor: 'default',
     }
+
     return (
         <div style={style}>
-            {/* result */}
+            {props.resultado}
         </div>
     )
 }
 
-function Botonera(): JSX.Element {
+function Botonera(props: {onClickButton:(value: string) => void}): JSX.Element {
     const style: Style = {
         height: '380px',
         padding: '10px',
@@ -68,6 +78,7 @@ function Botonera(): JSX.Element {
     }
 
     const botonesAMostrar = getBotones().map((boton, key) => {
+        const [opacity, setOpacity] = useState('1')
         const style: Style = {
             gridRowStart: boton.gridRowStart,
             gridRowEnd: boton.gridRowEnd,
@@ -76,9 +87,16 @@ function Botonera(): JSX.Element {
             color: boton.color ? boton.color : 'white',
             fontSize: '30px',
             cursor: 'pointer',
+            opacity,
         }
         return (
-            <div style={style} key={key}>
+            <div
+                style={style}
+                key={key}
+                onMouseEnter={() => setOpacity('0.6')}
+                onMouseLeave={() => setOpacity('1')}
+                onClick={() => props.onClickButton(boton.boton)}
+                >
                 {boton.boton}
             </div>
         )
