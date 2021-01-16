@@ -15,21 +15,21 @@ function Calculadora(): JSX.Element {
 
     const [result, setResult] = useState('0')
     const [lastValue, setLastValue] = useState('0')
-    const [onePreviousValue, setOnePreviousValue] = useState('nan')
     const [twoPreviousValue, setTwoPreviousValue] = useState('nan')
+    const [threePreviousValue, setThreePreviousValue] = useState('nan')
 
     const onClickButton = useCallback(
         (value: string) => {
-            const {valueToShow, lValue, onePValue, twoPValue} = getValueToShow(value, lastValue, onePreviousValue, twoPreviousValue )
+            const {valueToShow, newLastValue, newTwoPreviousValue, newThreePreviousValue} = getValueToShow(value, lastValue, twoPreviousValue, threePreviousValue )
             
             setResult(valueToShow)
-            setLastValue(lValue)
-            setOnePreviousValue(onePValue)
-            setTwoPreviousValue(twoPValue)
+            setLastValue(newLastValue)
+            setTwoPreviousValue(newTwoPreviousValue)
+            setThreePreviousValue(newThreePreviousValue)
 
         }, [
-            result, lastValue, onePreviousValue, twoPreviousValue,
-            setResult, getValueToShow, setLastValue, setOnePreviousValue, setTwoPreviousValue
+            result, lastValue, twoPreviousValue, threePreviousValue,
+            setResult, getValueToShow, setLastValue, setTwoPreviousValue, setThreePreviousValue
         ]
     )
 

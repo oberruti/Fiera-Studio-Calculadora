@@ -11,94 +11,94 @@ export enum SYMBOLS {
     clean = 'C',
 }
 
-export function getValueToShow(value: string, lastValue: string, onePValue: string, twoPValue: string): {valueToShow: string, lValue: string, onePValue: string, twoPValue: string} {
+export function getValueToShow(lastValue: string, previousValue: string, twoPreviousValue: string, threePreviousValue: string): {valueToShow: string, newLastValue: string, newTwoPreviousValue: string, newThreePreviousValue: string} {
     let result = '0'
-    switch(value){
+    switch(lastValue){
         case SYMBOLS.sum:
         case SYMBOLS.subtract:
         case SYMBOLS.division:
         case SYMBOLS.multiplication: {
-            const areTwoSymbolsInRow = isSymbol(lastValue)
+            const areTwoSymbolsInRow = isSymbol(previousValue)
             if(areTwoSymbolsInRow) {
                 return errorTwoSymbols
             }
-            const isIndirectOperation = !isSymbol(twoPValue) && isSymbol(onePValue)
+            const isIndirectOperation = !isSymbol(threePreviousValue) && isSymbol(twoPreviousValue)
             if (isIndirectOperation) {
-                result = getResultByValues(onePValue, lastValue, twoPValue)
+                result = getResultByValues(twoPreviousValue, previousValue, threePreviousValue)
                 if (result === SYMBOLS.error) {
                     return errorTwoSymbols
                 }
                 return {
                     valueToShow: result,
-                    lValue: value,
-                    onePValue: result,
-                    twoPValue: SYMBOLS.nan,
+                    newLastValue: lastValue,
+                    newTwoPreviousValue: result,
+                    newThreePreviousValue: SYMBOLS.nan,
                 }
             }
             return {
-                valueToShow: value,
-                lValue: value,
-                onePValue: lastValue,
-                twoPValue: onePValue,
+                valueToShow: lastValue,
+                newLastValue: lastValue,
+                newTwoPreviousValue: previousValue,
+                newThreePreviousValue: twoPreviousValue,
             }
         }
         case SYMBOLS.equal:{
-            const areTwoSymbolsInRow = isSymbol(lastValue) 
+            const areTwoSymbolsInRow = isSymbol(previousValue) 
             if(areTwoSymbolsInRow) {
                 return errorTwoSymbols
             }
-            result = getResultByValues(onePValue, lastValue, twoPValue)
+            result = getResultByValues(twoPreviousValue, previousValue, threePreviousValue)
             if (result === SYMBOLS.error) {
                 return errorTwoSymbols
             }
             return {
                 valueToShow: result,
-                lValue: result,
-                onePValue: SYMBOLS.nan,
-                twoPValue: SYMBOLS.nan,
+                newLastValue: result,
+                newTwoPreviousValue: SYMBOLS.nan,
+                newThreePreviousValue: SYMBOLS.nan,
             }
         }
         case SYMBOLS.clean:
             return {
                 valueToShow: '0',
-                lValue: '0',
-                onePValue: SYMBOLS.nan,
-                twoPValue: SYMBOLS.nan
+                newLastValue: '0',
+                newTwoPreviousValue: SYMBOLS.nan,
+                newThreePreviousValue: SYMBOLS.nan
             }
         default:{
-            const isNotInitialZero = !(lastValue==='0' && isSymbol(onePValue) && isSymbol(twoPValue))
-            const isNumber = !isSymbol(lastValue)
+            const isNotInitialZero = !(previousValue==='0' && isSymbol(twoPreviousValue) && isSymbol(threePreviousValue))
+            const isNumber = !isSymbol(previousValue)
             if(isNumber && isNotInitialZero ) {
                 return {
-                    valueToShow: lastValue + value,
-                    lValue: lastValue + value,
-                    onePValue: onePValue,
-                    twoPValue: twoPValue,
+                    valueToShow: previousValue + lastValue,
+                    newLastValue: previousValue + lastValue,
+                    newTwoPreviousValue: twoPreviousValue,
+                    newThreePreviousValue: threePreviousValue,
                 }
             }
             return {
-                valueToShow: value,
-                lValue: value,
-                onePValue: lastValue,
-                twoPValue: onePValue,
+                valueToShow: lastValue,
+                newLastValue: lastValue,
+                newTwoPreviousValue: previousValue,
+                newThreePreviousValue: twoPreviousValue,
             }
         }
     }
 }
 
-function getResultByValues(onePValue: string, lastValue: string, twoPValue: string ): string {
-    switch(onePValue) {
+function getResultByValues(twoPreviousValue: string, previousValue: string, threePreviousValue: string): string {
+    switch(twoPreviousValue) {
         case SYMBOLS.sum:
-            return getSuma(lastValue, twoPValue)
+            return getSuma(threePreviousValue, previousValue)
         case SYMBOLS.subtract:
-            return getResta(twoPValue, lastValue)
+            return getResta(threePreviousValue, previousValue)
         case SYMBOLS.multiplication:
-            return getMultiplicacion(lastValue, twoPValue)
+            return getMultiplicacion(threePreviousValue, previousValue)
         case SYMBOLS.division:
-            return getDivision(twoPValue, lastValue)
+            return getDivision(threePreviousValue, previousValue)
         case '0':
         case SYMBOLS.nan:
-            return lastValue
+            return previousValue
         default:
             return SYMBOLS.error
     }
@@ -122,13 +122,13 @@ function getMultiplicacion(valueOne: string, valueTwo: string): string {
 
 const errorTwoSymbols = {
     valueToShow: SYMBOLS.error,
-    lValue: '0',
-    onePValue: '0',
-    twoPValue: '0'
+    newLastValue: '0',
+    newTwoPreviousValue: '0',
+    newThreePreviousValue: '0'
 }
 
-function isSymbol(value: string): boolean {
-    switch(value){
+function isSymbol(lastValue: string): boolean {
+    switch(lastValue){
         case SYMBOLS.sum:
         case SYMBOLS.subtract:
         case SYMBOLS.division:
