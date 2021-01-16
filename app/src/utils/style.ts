@@ -1,5 +1,6 @@
 export const commonStyleResources = {
     colors: {
+        blue: '#607D8B',
         yellow: '#f4b100',
         gray: '#313131' 
     },
