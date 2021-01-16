@@ -1,6 +1,7 @@
 import React, { useCallback, useState } from 'react'
 import { JustChildren, Style } from '../utils/tsTypes'
 import { commonStyleResources } from '../utils/style'
+import { getBotones, getValueToShow} from './logicaCalculadora';
 
 function Calculadora(): JSX.Element {
     const background: Style = {
@@ -13,11 +14,24 @@ function Calculadora(): JSX.Element {
     }
 
     const [result, setResult] = useState('0')
+    const [lastValue, setLastValue] = useState('0')
+    const [onePreviousValue, setOnePreviousValue] = useState('nan')
+    const [twoPreviousValue, setTwoPreviousValue] = useState('nan')
 
-    const onClickButton = useCallback((value: string) => {
-        // const valueToShow = getValueToShow(value)
-        // setResult(valueToShow)
-    }, [result, setResult])
+    const onClickButton = useCallback(
+        (value: string) => {
+            const {valueToShow, lValue, onePValue, twoPValue} = getValueToShow(value, lastValue, onePreviousValue, twoPreviousValue )
+            
+            setResult(valueToShow)
+            setLastValue(lValue)
+            setOnePreviousValue(onePValue)
+            setTwoPreviousValue(twoPValue)
+
+        }, [
+            result, lastValue, onePreviousValue, twoPreviousValue,
+            setResult, getValueToShow, setLastValue, setOnePreviousValue, setTwoPreviousValue
+        ]
+    )
 
     return (
         <div style={background}>
@@ -56,6 +70,8 @@ function Resultado(props: {resultado: string}): JSX.Element {
         fontSize: '60px',
         alignItems: 'flex-end',
         cursor: 'default',
+        overflowWrap: 'normal',
+        overflowX: 'hidden',
     }
 
     return (
@@ -107,130 +123,6 @@ function Botonera(props: {onClickButton:(value: string) => void}): JSX.Element {
             {botonesAMostrar}
         </div>
     )
-}
-
-interface Botones {
-    boton: string
-    gridRowStart: number
-    gridRowEnd: number
-    gridColumnStart: number
-    gridColumnEnd: number
-    color?: string
-}
-
-function getBotones(): Botones[] {
-    return [
-        {
-            boton: 'C',
-            gridRowStart: 1,
-            gridRowEnd: 1,
-            gridColumnStart: 1,
-            gridColumnEnd: 4
-        },
-        {
-            boton: '%',
-            gridRowStart: 1,
-            gridRowEnd: 1,
-            gridColumnStart: 4,
-            gridColumnEnd: 4
-        },
-        {
-            boton: 'X',
-            gridRowStart: 2,
-            gridRowEnd: 2,
-            gridColumnStart: 4,
-            gridColumnEnd: 4
-        },
-        {
-            boton: '+',
-            gridRowStart: 3,
-            gridRowEnd: 3,
-            gridColumnStart: 4,
-            gridColumnEnd: 4
-        },{
-            boton: '-',
-            gridRowStart: 4,
-            gridRowEnd: 4,
-            gridColumnStart: 4,
-            gridColumnEnd: 4
-        },{
-            boton: '=',
-            gridRowStart: 5,
-            gridRowEnd: 5,
-            gridColumnStart: 4,
-            gridColumnEnd: 4,
-            color: commonStyleResources.colors.yellow
-        },
-        {
-            boton: '0',
-            gridRowStart: 5,
-            gridRowEnd: 5,
-            gridColumnStart: 1,
-            gridColumnEnd: 4
-        },
-        {
-            boton: '1',
-            gridRowStart: 4,
-            gridRowEnd: 4,
-            gridColumnStart: 1,
-            gridColumnEnd: 1
-        },
-        {
-            boton: '2',
-            gridRowStart: 4,
-            gridRowEnd: 4,
-            gridColumnStart: 2,
-            gridColumnEnd: 2
-        },
-        {
-            boton: '3',
-            gridRowStart: 4,
-            gridRowEnd: 4,
-            gridColumnStart: 3,
-            gridColumnEnd: 3
-        },
-        {
-            boton: '4',
-            gridRowStart: 3,
-            gridRowEnd: 3,
-            gridColumnStart: 1,
-            gridColumnEnd: 1
-        },
-        {
-            boton: '5',
-            gridRowStart: 3,
-            gridRowEnd: 3,
-            gridColumnStart: 2,
-            gridColumnEnd: 2
-        },
-        {
-            boton: '6',
-            gridRowStart: 3,
-            gridRowEnd: 3,
-            gridColumnStart: 3,
-            gridColumnEnd: 3
-        },
-        {
-            boton: '7',
-            gridRowStart: 2,
-            gridRowEnd: 2,
-            gridColumnStart: 1,
-            gridColumnEnd: 1
-        },
-        {
-            boton: '8',
-            gridRowStart: 2,
-            gridRowEnd: 2,
-            gridColumnStart: 2,
-            gridColumnEnd: 2
-        },
-        {
-            boton: '9',
-            gridRowStart: 2,
-            gridRowEnd: 2,
-            gridColumnStart: 3,
-            gridColumnEnd: 3
-        }]
 }
 
 export default Calculadora;
