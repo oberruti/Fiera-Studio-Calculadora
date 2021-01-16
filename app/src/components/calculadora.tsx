@@ -5,7 +5,7 @@ import { getBotones, getValueToShow} from './logicaCalculadora';
 
 function Calculadora(): JSX.Element {
     const background: Style = {
-        background: commonStyleResources.colors.yellow,
+        background: commonStyleResources.colors.blue,
         minHeight: commonStyleResources.dimensions.backgroundHeight,
         minWidth: commonStyleResources.dimensions.backgroundWidth,
         paddingTop: '100px',

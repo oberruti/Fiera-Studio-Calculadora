@@ -4,7 +4,7 @@ export enum SYMBOLS {
     sum = '+',
     subtract = '-',
     division = '/',
-    multiplication = 'X',
+    multiplication = 'x',
     nan = 'nan',
     error = 'ERROR',
     equal = '=',
