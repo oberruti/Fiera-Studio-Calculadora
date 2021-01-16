@@ -4,4 +4,4 @@
  Comando utilizado: Create-react-app.
  Ver codigo React en /app
 
-![Preview](Screen Shot 2021-01-15 at 23.44.59.png)
+![Preview](Screen%20Shot%202021-01-15%20at%2023.44.59.png)
